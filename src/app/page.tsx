@@ -10,6 +10,12 @@ import BannerCarousel from '@/components/layout/BannerCarousel'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
+const COLLECTION_PALETTES = [
+  { bg: '#E3E0DA', text: '#1A1A1A' },
+  { bg: '#C3C2BB', text: '#1A1A1A' },
+  { bg: '#A4A49C', text: '#1A1A1A' },
+]
+
 export default async function HomePage() {
   // cookies() debe llamarse ANTES de cualquier await
   const cookieStore = cookies()
@@ -26,7 +32,7 @@ export default async function HomePage() {
 
   const { data: config } = await supabase
     .from('store_config')
-    .select('logo_url, whatsapp_number, notification_email, instagram_url, facebook_url, tiktok_url, pickup_address, pickup_enabled, branches, price_visibility')
+    .select('logo_url, whatsapp_number, notification_email, instagram_url, facebook_url, tiktok_url, pickup_address, pickup_enabled, branches, price_visibility, collection_posts, collection_text_color')
     .eq('tenant_id', TENANT_ID())
     .single()
 
@@ -38,6 +44,16 @@ export default async function HomePage() {
 
   const asset = (slot: string): string | null =>
     assetsRows?.find(a => a.slot === slot)?.url ?? null
+
+  // Categorías para las 3 colecciones (mismo criterio que Atelier: si el tenant
+  // no cargó título a mano, se usa el nombre de la categoría automáticamente)
+  const { data: categories } = await supabase
+    .from('categories')
+    .select('id, name, slug')
+    .eq('tenant_id', TENANT_ID())
+    .eq('active', true)
+    .order('sort_order')
+    .limit(3)
 
   const PRODUCT_SELECT = 'id, name, slug, product_images(*), variants(color, size, price_rules(*))'
 
@@ -82,6 +98,17 @@ export default async function HomePage() {
   const banner2 = asset('banner_2')
   const banner3 = asset('banner_3')
   const bannerImages = [banner1, banner2, banner3].filter(Boolean) as string[]
+
+  // Título y bajada de cada banner de colección: si el tenant los cargó a mano
+  // en el panel, tienen prioridad sobre el nombre de categoría automático.
+  const rawCollectionPosts = (config as any)?.collection_posts
+  const collections = Array.from({ length: 3 }, (_, i) => ({
+    name: rawCollectionPosts?.[i]?.title || (categories as any)?.[i]?.name || ['Nueva Colección', 'Accesorios', 'Ropa'][i],
+    subtitle: rawCollectionPosts?.[i]?.subtitle || 'Piezas seleccionadas para esta temporada.',
+    slug: (categories as any)?.[i]?.slug ?? ['nueva-coleccion', 'accesorios', 'ropa'][i],
+    palette: COLLECTION_PALETTES[i],
+  }))
+  const collectionTextColor = (config as any)?.collection_text_color || null
 
   return (
     <>
@@ -131,6 +158,68 @@ export default async function HomePage() {
             <Link href="/tienda" className="inline-flex items-center gap-2 text-xs tracking-[0.15em] uppercase text-[var(--color-stone)]">
               Ver catálogo completo <ArrowRight size={13} />
             </Link>
+          </div>
+        </section>
+
+        {/* ── FEATURES BAR ─────────────────────────────────────── */}
+        <section className="max-w-7xl mx-auto px-6 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {[
+              { title: 'Envío a todo el país', desc: 'En compras que superen el monto mínimo. Entrega rápida y segura a todo el país.' },
+              { title: 'Compra Segura', desc: 'Garantizamos una experiencia de compra segura de principio a fin.' },
+              { title: 'Atención al cliente', desc: 'Estamos disponibles para ayudarte en todo momento por WhatsApp e email.' },
+            ].map((feat, i) => (
+              <div key={i} className="flex gap-4 items-start">
+                <div className="w-11 h-11 bg-[var(--color-cream)] flex-shrink-0" />
+                <div>
+                  <h3 className="font-bold text-sm text-[var(--color-charcoal)] mb-1.5">{feat.title}</h3>
+                  <p className="text-xs leading-relaxed text-[var(--color-stone)]">{feat.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── COLECCIONES ──────────────────────────────────────── */}
+        <section className="w-full px-4 md:px-8 lg:px-12 pb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {collections.map((col, i) => {
+              const colImg = asset(`collection_${i + 1}`)
+              // Si el tenant eligió un color, se respeta siempre (con o sin imagen).
+              // Si no, se mantiene el comportamiento anterior por defecto.
+              const baseColor = collectionTextColor ?? (colImg ? '#ffffff' : '#1A1A1A')
+              return (
+                <Link
+                  key={i}
+                  href={`/tienda?cat=${col.slug}`}
+                  className={`group relative overflow-hidden aspect-[4/5] block ${i === 1 ? 'md:translate-y-6' : ''}`}
+                  style={{ backgroundColor: col.palette.bg }}
+                >
+                  {colImg && (
+                    <img
+                      src={colImg}
+                      alt={col.name}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h2 className="text-2xl font-bold mb-1" style={{ color: baseColor }}>
+                      {col.name}
+                    </h2>
+                    <p className="text-xs mb-4 leading-relaxed" style={{ color: baseColor + 'B3' }}>
+                      {col.subtitle}
+                    </p>
+                    <span
+                      className="text-xs font-bold tracking-[0.15em] uppercase border-b-2 pb-0.5 group-hover:text-[var(--color-accent)] group-hover:border-[var(--color-accent)] transition-colors"
+                      style={{ color: baseColor, borderColor: baseColor }}
+                    >
+                      DISCOVER MORE
+                    </span>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </section>
 
