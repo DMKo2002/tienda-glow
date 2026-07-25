@@ -177,7 +177,7 @@ export default async function ProductoPage({ params }: Props) {
       />
       <Navbar storeName={storeName} logoUrl={config?.logo_url} tourUrl={(config as any)?.video_360_url} />
 
-      <main className="pt-24 min-h-screen">
+      <main className="pt-[148px] min-h-screen">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
 

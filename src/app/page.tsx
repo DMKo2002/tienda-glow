@@ -97,7 +97,9 @@ export default async function HomePage() {
     <>
       <Navbar storeName={storeName} logoUrl={config?.logo_url} />
 
-      <main>
+      {/* El header flota transparente sobre el banner (como siempre), pero la barra de
+          categorías fija nueva sí tiene fondo sólido y empuja el banner hacia abajo. */}
+      <main className="pt-[124px]">
 
         {/* ── BANNERS (carrusel infinito de 3 imágenes) ─────────── */}
         {bannerImages.length > 0 ? (

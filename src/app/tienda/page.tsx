@@ -272,7 +272,7 @@ export default async function TiendaPage({ searchParams }: Props) {
     <>
       <Navbar storeName={storeName} logoUrl={config?.logo_url} tourUrl={(config as any)?.video_360_url} />
 
-      <main className="pt-28">
+      <main className="pt-[164px]">
 
         {/* Header de la sección */}
         <div className="max-w-7xl mx-auto px-6 pb-8 border-b border-[var(--color-border)]">

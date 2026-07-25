@@ -40,7 +40,7 @@ export default function TourPage() {
     <>
       <Navbar storeName={storeName} logoUrl={logoUrl} tourUrl={tourUrl} />
 
-      <main className="min-h-screen bg-[var(--color-warm-white)] pt-28 pb-20">
+      <main className="min-h-screen bg-[var(--color-warm-white)] pt-[164px] pb-20">
         <div className="w-full px-4 md:px-8">
           {/* Título */}
           <div className="mb-8 text-center">

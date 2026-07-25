@@ -66,7 +66,7 @@ export default function ContactPage() {
     <>
       <Navbar storeName={storeName} logoUrl={logoUrl} tourUrl={tourUrl} />
 
-      <main className="pt-28 pb-0 min-h-screen bg-white">
+      <main className="pt-[164px] pb-0 min-h-screen bg-white">
 
         {/* ── Título ── */}
         <div className="text-center py-12">
