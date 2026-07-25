@@ -17,7 +17,7 @@ export default function BannerCarousel({
   images,
   href = '/tienda',
   alt = '',
-  intervalMs = 5000,
+  intervalMs = 2000,
 }: BannerCarouselProps) {
   const slides = images.filter(Boolean)
   const [index, setIndex] = useState(0)
