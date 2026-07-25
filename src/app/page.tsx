@@ -137,7 +137,7 @@ export default async function HomePage() {
         {/* ── PRODUCTOS DESTACADOS ─────────────────────────────── */}
         <section className="w-full px-6 md:px-10 py-16">
           <div className="text-center mb-8">
-            <h2 className="font-display text-2xl md:text-3xl font-light text-[var(--color-charcoal)]">
+            <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-charcoal)]">
               Productos destacados
             </h2>
           </div>
