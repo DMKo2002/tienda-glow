@@ -6,8 +6,8 @@ export const dynamic = 'force-dynamic'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import ProductCard from '@/components/shop/ProductCard'
+import BannerCarousel from '@/components/layout/BannerCarousel'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowRight, Sparkles } from 'lucide-react'
 
 export default async function HomePage() {
@@ -91,7 +91,7 @@ export default async function HomePage() {
   const banner1 = asset('banner_1')
   const banner2 = asset('banner_2')
   const banner3 = asset('banner_3')
-  const hasBanners = !!(banner1 || banner2 || banner3)
+  const bannerImages = [banner1, banner2, banner3].filter(Boolean) as string[]
 
   return (
     <>
@@ -99,29 +99,9 @@ export default async function HomePage() {
 
       <main>
 
-        {/* ── BANNERS ──────────────────────────────────────────── */}
-        {hasBanners ? (
-          <section className="w-full space-y-2 md:space-y-3">
-            {banner1 && (
-              <Link href="/tienda" className="block w-full relative aspect-[16/6] overflow-hidden bg-[#F5F1EC]">
-                <Image src={banner1.split('?')[0]} alt={storeName} fill className="object-cover" priority sizes="100vw" />
-              </Link>
-            )}
-            {(banner2 || banner3) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
-                {banner2 && (
-                  <Link href="/tienda" className="block relative aspect-[16/9] md:aspect-[16/10] overflow-hidden bg-[#F5F1EC]">
-                    <Image src={banner2.split('?')[0]} alt={storeName} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-                  </Link>
-                )}
-                {banner3 && (
-                  <Link href="/tienda" className="block relative aspect-[16/9] md:aspect-[16/10] overflow-hidden bg-[#F5F1EC]">
-                    <Image src={banner3.split('?')[0]} alt={storeName} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-                  </Link>
-                )}
-              </div>
-            )}
-          </section>
+        {/* ── BANNERS (carrusel infinito de 3 imágenes) ─────────── */}
+        {bannerImages.length > 0 ? (
+          <BannerCarousel images={bannerImages} alt={storeName} />
         ) : (
           // Fallback simple mientras no se suben banners desde Personalización
           <section className="w-full py-24 px-6 bg-[#F5F1EC] text-center">
