@@ -132,12 +132,12 @@ export default function Navbar({ storeName = 'TIENDA', logoUrl, tourUrl }: Navba
       {/* ── MEGA MENU ── full width panel */}
       {categories.length > 0 && (
         <div
-          className={`fixed left-0 right-0 z-40 hidden md:block transition-all duration-300 ease-in-out ${headerHeight} ${
+          className={`fixed left-0 right-0 z-40 hidden md:block border-b border-[var(--color-border)] shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out ${headerHeight} ${
             megaOpen
               ? 'opacity-100 translate-y-0 pointer-events-auto'
               : 'opacity-0 -translate-y-2 pointer-events-none'
           }`}
-          style={{ backgroundColor: '#e5e7eb' }}
+          style={{ backgroundColor: '#FFFFFF' }}
           onMouseEnter={cancelClose}
           onMouseLeave={close}
         >
