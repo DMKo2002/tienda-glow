@@ -104,7 +104,7 @@ export default async function HomePage() {
           <BannerCarousel images={bannerImages} alt={storeName} />
         ) : (
           // Fallback simple mientras no se suben banners desde Personalización
-          <section className="w-full py-24 px-6 bg-[#F5F1EC] text-center">
+          <section className="w-full py-24 px-6 bg-white text-center">
             <p className="text-xs tracking-[0.25em] uppercase text-[var(--color-stone)] mb-3">{storeName}</p>
             <h1 className="font-display text-4xl md:text-6xl font-light text-[var(--color-charcoal)]">
               Cuidá tu piel, sentite bien
@@ -139,18 +139,12 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* ── TODOS LOS PRODUCTOS ──────────────────────────────── */}
+        {/* ── PRODUCTOS DESTACADOS ─────────────────────────────── */}
         <section className="w-full px-6 py-16">
-          <div className="flex items-center justify-between mb-8">
+          <div className="text-center mb-8">
             <h2 className="font-display text-2xl md:text-3xl font-light text-[var(--color-charcoal)]">
-              Todos los productos
+              Productos destacados
             </h2>
-            <Link
-              href="/tienda"
-              className="hidden md:inline-flex items-center gap-2 text-xs tracking-[0.15em] uppercase text-[var(--color-stone)] hover:text-[var(--color-charcoal)] transition-colors"
-            >
-              Ver catálogo completo <ArrowRight size={13} />
-            </Link>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">

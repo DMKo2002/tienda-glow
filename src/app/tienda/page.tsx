@@ -2,7 +2,6 @@ import { createServerSupabase, createServiceSupabase, TENANT_ID } from '@/lib/su
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import ProductCard from '@/components/shop/ProductCard'
-import CatalogFilters from '@/components/shop/CatalogFilters'
 import MobileFilterDrawer from '@/components/shop/MobileFilterDrawer'
 
 interface Props {
@@ -289,80 +288,55 @@ export default async function TiendaPage({ searchParams }: Props) {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row gap-12">
-
-            {/* Sidebar filtros — solo desktop */}
-            <aside className="hidden md:block w-52 flex-shrink-0">
-              <CatalogFilters
-                categories={categoriesWithCount}
-                availableColors={allColors}
-                colorHexMap={colorHexMap}
-                availableSizes={allSizes}
-                maxPrice={0}
-                currentCat={searchParams.cat}
-                currentOrden={searchParams.orden}
-                currentQ={searchParams.q}
-                currentColor={searchParams.color}
-                currentTalle={searchParams.talle}
-                currentPrecioMin={precioMin}
-                currentPrecioMax={precioMax}
-                currentDescuento={soloDescuento}
+          {/* Botón "Filtrar" — categorías y subcategorías se navegan desde el
+              mega-menú del header; acá solo quedan color/talle/precio/orden */}
+          <MobileFilterDrawer
+            categories={categoriesWithCount}
+            availableColors={allColors}
+            colorHexMap={colorHexMap}
+            availableSizes={allSizes}
+            currentCat={searchParams.cat}
+            currentOrden={searchParams.orden}
+            currentQ={searchParams.q}
+            currentColor={searchParams.color}
+            currentTalle={searchParams.talle}
+            currentPrecioMin={precioMin}
+            currentPrecioMax={precioMax}
+            currentDescuento={soloDescuento}
+            activeFilterCount={[searchParams.color, searchParams.talle, searchParams.precio_min, searchParams.precio_max, searchParams.descuento].filter(Boolean).length}
+          />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-12">
+            {products.map((product: any, i: number) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                slug={product.slug}
+                coverUrl={product.cover?.url}
+                images={product.images}
+                retailPrice={product.retailPrice}
+                retailCompareAt={product.retailCompareAt}
+                wholesalePrice={product.wholesalePrice}
+                showPrices={showPrices}
+                showWholesale={showWholesale}
+                priceVisibility={priceVisibility}
+                isRetailUser={isRetailUser}
+                colors={product.colors}
+                sizes={product.sizes}
+                index={i}
               />
-            </aside>
+            ))}
 
-            {/* Grid productos */}
-            <div className="flex-1">
-              {/* Botón filtrar — solo mobile */}
-              <MobileFilterDrawer
-                categories={categoriesWithCount}
-                availableColors={allColors}
-                colorHexMap={colorHexMap}
-                availableSizes={allSizes}
-                currentCat={searchParams.cat}
-                currentOrden={searchParams.orden}
-                currentQ={searchParams.q}
-                currentColor={searchParams.color}
-                currentTalle={searchParams.talle}
-                currentPrecioMin={precioMin}
-                currentPrecioMax={precioMax}
-                currentDescuento={soloDescuento}
-                activeFilterCount={[searchParams.cat, searchParams.color, searchParams.talle, searchParams.precio_min, searchParams.precio_max, searchParams.descuento, searchParams.q].filter(Boolean).length}
-              />
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
-                {products.map((product: any, i: number) => (
-                  <ProductCard
-                    key={product.id}
-                    id={product.id}
-                    name={product.name}
-                    slug={product.slug}
-                    coverUrl={product.cover?.url}
-                    images={product.images}
-                    retailPrice={product.retailPrice}
-                    retailCompareAt={product.retailCompareAt}
-                    wholesalePrice={product.wholesalePrice}
-                    showPrices={showPrices}
-                    showWholesale={showWholesale}
-                    priceVisibility={priceVisibility}
-                    isRetailUser={isRetailUser}
-                    colors={product.colors}
-                    sizes={product.sizes}
-                    index={i}
-                  />
-                ))}
-
-                {products.length === 0 && (
-                  <div className="col-span-3 py-24 text-center">
-                    <p className="font-display text-2xl font-light text-[var(--color-stone)]">
-                      No hay productos con los filtros seleccionados
-                    </p>
-                    <a href="/tienda" className="text-sm text-[var(--color-stone)] underline mt-3 inline-block hover:text-[var(--color-charcoal)]">
-                      Ver todos los productos
-                    </a>
-                  </div>
-                )}
+            {products.length === 0 && (
+              <div className="col-span-full py-24 text-center">
+                <p className="font-display text-2xl font-light text-[var(--color-stone)]">
+                  No hay productos con los filtros seleccionados
+                </p>
+                <a href="/tienda" className="text-sm text-[var(--color-stone)] underline mt-3 inline-block hover:text-[var(--color-charcoal)]">
+                  Ver todos los productos
+                </a>
               </div>
-            </div>
-
+            )}
           </div>
         </div>
 

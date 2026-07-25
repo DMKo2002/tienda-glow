@@ -23,7 +23,7 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--color-cream);
+  background-color: #FFFFFF;
   color: var(--color-charcoal);
   font-weight: 300;
   -webkit-font-smoothing: antialiased;

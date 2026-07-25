@@ -54,7 +54,7 @@ export default function BannerCarousel({
 
   return (
     <section
-      className="relative w-full aspect-[16/6] overflow-hidden bg-[var(--color-cream)]"
+      className="relative w-full aspect-[16/6] overflow-hidden bg-white"
       onMouseEnter={stop}
       onMouseLeave={start}
     >
