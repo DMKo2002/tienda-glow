@@ -278,7 +278,7 @@ export default async function TiendaPage({ searchParams }: Props) {
 
       <main className="pt-[164px]">
 
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="w-full px-6 md:px-10 py-8">
           {/* Botón "Filtrar" — categorías y subcategorías se navegan desde el
               mega-menú del header; acá solo quedan color/talle/precio/orden */}
           <MobileFilterDrawer
