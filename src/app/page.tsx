@@ -8,7 +8,7 @@ import Footer from '@/components/layout/Footer'
 import ProductCard from '@/components/shop/ProductCard'
 import BannerCarousel from '@/components/layout/BannerCarousel'
 import Link from 'next/link'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 export default async function HomePage() {
   // cookies() debe llamarse ANTES de cualquier await
@@ -41,17 +41,7 @@ export default async function HomePage() {
 
   const PRODUCT_SELECT = 'id, name, slug, product_images(*), variants(color, size, price_rules(*))'
 
-  // Best sellers — marcados a mano desde Panel Admin (checkbox "Destacado")
-  const { data: bestsellers } = await supabase
-    .from('products')
-    .select(PRODUCT_SELECT)
-    .eq('tenant_id', TENANT_ID())
-    .eq('active', true)
-    .eq('is_bestseller', true)
-    .order('created_at', { ascending: false })
-    .limit(8)
-
-  // Catálogo grande de la home — 6 columnas × ~8 filas
+  // Catálogo grande de la home — 5 columnas × ~8 filas (mismo ancho que /tienda)
   const { data: catalog } = await supabase
     .from('products')
     .select(PRODUCT_SELECT)
@@ -117,39 +107,15 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* ── BEST SELLERS ─────────────────────────────────────── */}
-        {bestsellers && bestsellers.length > 0 && (
-          <section className="w-full px-6 py-16">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-2">
-                <Sparkles size={16} className="text-[var(--color-stone)]" />
-                <h2 className="font-display text-2xl md:text-3xl font-light text-[var(--color-charcoal)]">
-                  Los más vendidos
-                </h2>
-              </div>
-              <Link
-                href="/tienda"
-                className="hidden md:inline-flex items-center gap-2 text-xs tracking-[0.15em] uppercase text-[var(--color-stone)] hover:text-[var(--color-charcoal)] transition-colors"
-              >
-                Ver todo <ArrowRight size={13} />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {bestsellers.map((p: any, i: number) => <ProductCard {...toCardProps(p, i)} />)}
-            </div>
-          </section>
-        )}
-
         {/* ── PRODUCTOS DESTACADOS ─────────────────────────────── */}
-        <section className="w-full px-6 py-16">
+        <section className="w-full px-6 md:px-10 py-16">
           <div className="text-center mb-8">
             <h2 className="font-display text-2xl md:text-3xl font-light text-[var(--color-charcoal)]">
               Productos destacados
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
             {catalog?.map((p: any, i: number) => <ProductCard {...toCardProps(p, i)} />)}
 
             {(!catalog || catalog.length === 0) && (
