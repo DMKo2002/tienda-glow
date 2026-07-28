@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer'
 import ProductCard from '@/components/shop/ProductCard'
 import BannerCarousel from '@/components/layout/BannerCarousel'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 
 const COLLECTION_PALETTES = [
@@ -196,10 +197,12 @@ export default async function HomePage() {
                   style={{ backgroundColor: col.palette.bg }}
                 >
                   {colImg && (
-                    <img
+                    <Image
                       src={colImg}
                       alt={col.name}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors" />
