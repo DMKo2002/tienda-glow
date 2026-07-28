@@ -238,6 +238,10 @@ export default async function ProductoPage({ params }: Props) {
 
               <div className="w-full h-px bg-[var(--color-border)] mb-8" />
 
+              <p style={{ fontSize: 10, color: 'red', background: 'yellow', padding: 4 }}>
+                DEBUG cuotas: config={JSON.stringify(config)} | product.max_installments={JSON.stringify((product as any).max_installments)}
+              </p>
+
               <AddToCartButton
                 product={{
                   id: product.id,
