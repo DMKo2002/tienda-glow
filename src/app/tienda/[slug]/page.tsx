@@ -64,11 +64,12 @@ export default async function ProductoPage({ params }: Props) {
   const supabase = await createServerSupabase()
 
   const { data: tenant } = await supabase.from('tenants').select('name').eq('id', TENANT_ID()).single()
-  const { data: config } = await supabase
+  const { data: config, error: configError, status: configStatus } = await supabase
     .from('store_config')
     .select('logo_url, whatsapp_number, notification_email, price_visibility, ignore_stock, video_360_url, min_qty_per_variant, interest_free_installments')
     .eq('tenant_id', TENANT_ID())
     .single()
+  console.log('[debug cuotas] tenantId=', TENANT_ID(), 'configError=', JSON.stringify(configError), 'status=', configStatus, 'config=', JSON.stringify(config))
 
   const { data: product } = await supabase
     .from('products')
@@ -239,7 +240,7 @@ export default async function ProductoPage({ params }: Props) {
               <div className="w-full h-px bg-[var(--color-border)] mb-8" />
 
               <p style={{ fontSize: 10, color: 'red', background: 'yellow', padding: 4 }}>
-                DEBUG cuotas: config={JSON.stringify(config)} | product.max_installments={JSON.stringify((product as any).max_installments)}
+                DEBUG cuotas: config={JSON.stringify(config)} | error={JSON.stringify(configError)} | status={configStatus} | tenantId={TENANT_ID()} | product.max_installments={JSON.stringify((product as any).max_installments)}
               </p>
 
               <AddToCartButton
