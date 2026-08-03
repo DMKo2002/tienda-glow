@@ -33,7 +33,7 @@ export default async function HomePage() {
 
   const { data: config } = await supabase
     .from('store_config')
-    .select('logo_url, whatsapp_number, notification_email, instagram_url, facebook_url, tiktok_url, pickup_address, pickup_enabled, branches, price_visibility, collection_posts, collection_text_color')
+    .select('logo_url, whatsapp_number, notification_email, instagram_url, facebook_url, tiktok_url, pickup_address, pickup_enabled, branches, price_visibility, collection_posts, collection_text_color, product_image_ratio, ignore_stock')
     .eq('tenant_id', TENANT_ID())
     .single()
 
@@ -56,20 +56,23 @@ export default async function HomePage() {
     .order('sort_order')
     .limit(3)
 
-  const PRODUCT_SELECT = 'id, name, slug, product_images(*), variants(color, size, price_rules(*))'
+  const PRODUCT_SELECT = 'id, name, slug, product_images(*), variants(id, color, size, stock, price_rules(*))'
 
-  // Catálogo grande de la home — 5 columnas × ~8 filas (mismo ancho que /tienda)
+  // Catálogo grande de la home — Glow es de producto simple, con 10 alcanza
+  // para la sección "Productos destacados" (el resto se ve en /tienda)
   const { data: catalog } = await supabase
     .from('products')
     .select(PRODUCT_SELECT)
     .eq('tenant_id', TENANT_ID())
     .eq('active', true)
     .order('created_at', { ascending: false })
-    .limit(48)
+    .limit(10)
 
   const storeName = tenant?.name ?? 'TIENDA'
   const priceVisibility = (config as any)?.price_visibility ?? 'all'
   const showPrices = priceVisibility === 'all' || (priceVisibility === 'logged_in' && isLoggedIn)
+  const imageRatio = (config as any)?.product_image_ratio === '1:1' ? '1:1' : '2:3'
+  const ignoreStock = Boolean((config as any)?.ignore_stock)
 
   function toCardProps(product: any, i: number) {
     const cover = product.product_images?.find((img: any) => img.is_cover) ?? product.product_images?.[0]
@@ -92,6 +95,10 @@ export default async function HomePage() {
       colors,
       sizes,
       index: i,
+      imageRatio,
+      variantId: product.variants?.[0]?.id ?? null,
+      stock: product.variants?.[0]?.stock ?? 0,
+      ignoreStock,
     }
   }
 
