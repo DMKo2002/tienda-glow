@@ -233,7 +233,7 @@ export default async function TiendaPage({ searchParams }: Props) {
 
   const storeName = tenant?.name ?? 'TIENDA'
   const priceVisibility = (config as any)?.price_visibility ?? 'all'
-  const imageRatio = (config as any)?.product_image_ratio === '1:1' ? '1:1' : '2:3'
+  const imageRatio: '2:3' | '1:1' = (config as any)?.product_image_ratio === '1:1' ? '1:1' : '2:3'
   const ignoreStock = Boolean((config as any)?.ignore_stock)
 
   let showPrices = false
