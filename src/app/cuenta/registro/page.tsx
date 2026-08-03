@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Turnstile from 'react-turnstile'
 import { createClient, TENANT_ID } from '@/lib/supabase'
+import { getStoreData } from '@creart/tienda-core/store-data'
 
 type Tipo = 'retail' | 'wholesale'
 
@@ -55,17 +56,12 @@ function RegistroForm() {
 
   useEffect(() => {
     const supabase = createClient()
-    supabase
-      .from('store_config')
-      .select('registration_visibility')
-      .eq('tenant_id', TENANT_ID())
-      .single()
-      .then(({ data }) => {
-        const rv = ((data as any)?.registration_visibility ?? 'both') as typeof regVisibility
-        setRegVisibility(rv)
-        if (rv === 'retail_only' && !isUpgrade) setTipo('retail')
-        if (rv === 'wholesale_only' && !isUpgrade) setTipo('wholesale')
-      })
+    getStoreData(supabase, TENANT_ID()).then(({ config }) => {
+      const rv = (config?.registration_visibility ?? 'both') as typeof regVisibility
+      setRegVisibility(rv)
+      if (rv === 'retail_only' && !isUpgrade) setTipo('retail')
+      if (rv === 'wholesale_only' && !isUpgrade) setTipo('wholesale')
+    })
   }, [])
 
   // Upgrade de minorista a mayorista: precarga los datos que ya tenemos de la

@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { createServerSupabase, TENANT_ID } from '@/lib/supabase-server'
+import { getStoreData } from '@creart/tienda-core/store-data'
 
 // Siempre SSR fresco — sin esto Next.js cachea la página y los cambios del panel no se ven
 export const dynamic = 'force-dynamic'
@@ -24,18 +25,10 @@ export default async function HomePage() {
 
   const supabase = await createServerSupabase()
 
-  // Datos de la tienda
-  const { data: tenant } = await supabase
-    .from('tenants')
-    .select('name, domain')
-    .eq('id', TENANT_ID())
-    .single()
-
-  const { data: config } = await supabase
-    .from('store_config')
-    .select('logo_url, whatsapp_number, notification_email, instagram_url, facebook_url, tiktok_url, pickup_address, pickup_enabled, branches, price_visibility, collection_posts, collection_text_color, product_image_ratio, ignore_stock')
-    .eq('tenant_id', TENANT_ID())
-    .single()
+  // Datos de la tienda — select('*') centralizado en tienda-core: si en el
+  // futuro se agrega/rompe una columna nueva de store_config, no vuelve a
+  // tirar abajo el footer entero (ver getStoreData).
+  const { tenant, config } = await getStoreData(supabase, TENANT_ID())
 
   // Imágenes configurables desde Panel Admin > Personalización (banners grandes)
   const { data: assetsRows } = await supabase
