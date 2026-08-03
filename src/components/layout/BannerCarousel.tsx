@@ -68,7 +68,7 @@ export default function BannerCarousel({
           tabIndex={i === index ? 0 : -1}
         >
           <Image
-            src={src.split('?')[0]}
+            src={src}
             alt={alt}
             fill
             className="object-cover"
