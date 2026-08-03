@@ -25,10 +25,17 @@ export default async function HomePage() {
 
   const supabase = await createServerSupabase()
 
-  // Datos de la tienda — select('*') centralizado en tienda-core: si en el
-  // futuro se agrega/rompe una columna nueva de store_config, no vuelve a
-  // tirar abajo el footer entero (ver getStoreData).
+  // Datos funcionales de la tienda (contacto, footer, checkout) — comunes a
+  // las 6 plantillas, viven en tienda-core.
   const { tenant, config } = await getStoreData(supabase, TENANT_ID())
+
+  // Apariencia de ESTA plantilla (colecciones): propia de Glow, no vive en
+  // tienda-core — así cada template queda intercambiable a futuro.
+  const { data: appearance } = await supabase
+    .from('store_config')
+    .select('collection_posts, collection_text_color')
+    .eq('tenant_id', TENANT_ID())
+    .single()
 
   // Imágenes configurables desde Panel Admin > Personalización (banners grandes)
   const { data: assetsRows } = await supabase
@@ -102,14 +109,14 @@ export default async function HomePage() {
 
   // Título y bajada de cada banner de colección: si el tenant los cargó a mano
   // en el panel, tienen prioridad sobre el nombre de categoría automático.
-  const rawCollectionPosts = (config as any)?.collection_posts
+  const rawCollectionPosts = (appearance as any)?.collection_posts
   const collections = Array.from({ length: 3 }, (_, i) => ({
     name: rawCollectionPosts?.[i]?.title || (categories as any)?.[i]?.name || ['Nueva Colección', 'Accesorios', 'Ropa'][i],
     subtitle: rawCollectionPosts?.[i]?.subtitle || 'Piezas seleccionadas para esta temporada.',
     slug: (categories as any)?.[i]?.slug ?? ['nueva-coleccion', 'accesorios', 'ropa'][i],
     palette: COLLECTION_PALETTES[i],
   }))
-  const collectionTextColor = (config as any)?.collection_text_color || null
+  const collectionTextColor = (appearance as any)?.collection_text_color || null
 
   return (
     <>
