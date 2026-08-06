@@ -65,7 +65,7 @@ export default async function HomePage() {
     .select(PRODUCT_SELECT)
     .eq('tenant_id', TENANT_ID())
     .eq('active', true)
-    .order('created_at', { ascending: false })
+    .order('sort_order', { ascending: true })
     .limit(10)
 
   const storeName = tenant?.name ?? 'TIENDA'
