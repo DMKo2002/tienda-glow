@@ -133,9 +133,6 @@ export default async function HomePage() {
           // Fallback simple mientras no se suben banners desde Personalización
           <section className="w-full py-24 px-6 bg-white text-center">
             <p className="text-xs tracking-[0.25em] uppercase text-[var(--color-stone)] mb-3">{storeName}</p>
-            <h1 className="font-display text-4xl md:text-6xl font-light text-[var(--color-charcoal)]">
-              Cuidá tu piel, sentite bien
-            </h1>
             <Link href="/tienda" className="inline-flex items-center gap-2 mt-6 text-xs tracking-[0.2em] uppercase border-b border-[var(--color-charcoal)] pb-1">
               Ver productos <ArrowRight size={13} />
             </Link>

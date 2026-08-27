@@ -88,7 +88,6 @@ export default function Footer({
                 {storeName}
               </p>
             )}
-            <p className="text-xs leading-relaxed mb-5">Cuidá tu piel, sentite bien.</p>
             {hasSocial && (
               <div className="flex items-center gap-3">
                 {instagramUrl && (
