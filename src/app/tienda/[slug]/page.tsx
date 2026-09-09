@@ -1,5 +1,7 @@
 import { createServerSupabase, createServiceSupabase, TENANT_ID } from '@/lib/supabase-server'
 import { getStoreData } from '@creart/tienda-core/store-data'
+import { buildProductJsonLd } from '@creart/tienda-core/seo'
+import JsonLd from '@creart/tienda-core/JsonLd'
 import { notFound } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -154,29 +156,16 @@ export default async function ProductoPage({ params }: Props) {
       ? retailRule?.compare_at_price : undefined
   const retailPrice = retailRebajado ?? retailRegular
   const retailCompareAt = retailRebajado ? retailRegular : undefined
-  const jsonLd = {
-    '@context': 'https://schema.org/',
-    '@type': 'Product',
-    name: product.name,
-    description: product.description ?? `${product.name} - ${storeName}`,
-    image: coverImage ? [coverImage] : undefined,
-    sku: (product as any).sku ?? undefined,
-    offers: retailPrice ? {
-      '@type': 'Offer',
-      url: `${process.env.NEXT_PUBLIC_APP_URL ?? ''}/tienda/${product.slug}`,
-      priceCurrency: 'ARS',
-      price: retailPrice,
-      availability: 'https://schema.org/InStock',
-      seller: { '@type': 'Organization', name: storeName },
-    } : undefined,
-  }
+  const jsonLd = buildProductJsonLd(
+    { name: product.name, description: product.description, slug: product.slug, sku: (product as any).sku },
+    storeName,
+    retailPrice,
+    coverImage
+  )
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <Navbar storeName={storeName} logoUrl={config?.logo_url} tourUrl={(config as any)?.video_360_url} />
 
       <main className="pt-[148px] min-h-screen">
