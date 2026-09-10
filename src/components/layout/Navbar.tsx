@@ -92,9 +92,14 @@ export default function Navbar({ storeName = 'TIENDA', logoUrl, tourUrl }: Navba
           {/* Logo centrado */}
           <Link href="/" className="absolute left-1/2 -translate-x-1/2">
             {logoUrl ? (
-              <span className="relative block h-8 w-[160px]">
-                <Image src={logoUrl} alt={storeName} fill sizes="160px" className="object-contain" priority />
-              </span>
+              <Image
+                src={logoUrl}
+                alt={storeName}
+                width={160}
+                height={64}
+                style={{ width: '160px', height: 'auto' }}
+                priority
+              />
             ) : (
               <span className="font-display text-xl font-light tracking-[0.2em] uppercase text-[var(--color-charcoal)]">
                 {storeName}
