@@ -95,9 +95,9 @@ export default function Navbar({ storeName = 'TIENDA', logoUrl, tourUrl }: Navba
               <Image
                 src={logoUrl}
                 alt={storeName}
-                width={160}
+                width={80}
                 height={64}
-                style={{ width: '160px', height: 'auto' }}
+                style={{ width: '80px', height: 'auto' }}
                 priority
               />
             ) : (
