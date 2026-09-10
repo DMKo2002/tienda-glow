@@ -1,7 +1,5 @@
 import { createServerSupabase, createServiceSupabase, TENANT_ID } from '@/lib/supabase-server'
 import { getStoreData } from '@creart/tienda-core/store-data'
-import { buildProductJsonLd } from '@creart/tienda-core/seo'
-import JsonLd from '@creart/tienda-core/JsonLd'
 import { notFound } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -156,16 +154,8 @@ export default async function ProductoPage({ params }: Props) {
       ? retailRule?.compare_at_price : undefined
   const retailPrice = retailRebajado ?? retailRegular
   const retailCompareAt = retailRebajado ? retailRegular : undefined
-  const jsonLd = buildProductJsonLd(
-    { name: product.name, description: product.description, slug: product.slug, sku: (product as any).sku },
-    storeName,
-    retailPrice,
-    coverImage
-  )
-
   return (
     <>
-      <JsonLd data={jsonLd} />
       <Navbar storeName={storeName} logoUrl={config?.logo_url} tourUrl={(config as any)?.video_360_url} />
 
       <main className="pt-[148px] min-h-screen">
