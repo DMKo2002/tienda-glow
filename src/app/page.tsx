@@ -24,28 +24,28 @@ const COLLECTION_PALETTES = [
 
 export default async function HomePage() {
   // cookies() debe llamarse ANTES de cualquier await
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const isLoggedIn = cookieStore.getAll().some(c => c.name.includes('-auth-token') && (c.value?.length ?? 0) > 10)
 
   const supabase = await createServerSupabase()
 
   // Datos funcionales de la tienda (contacto, footer, checkout) — comunes a
   // las 6 plantillas, viven en tienda-core.
-  const { tenant, config } = await getStoreData(supabase, TENANT_ID())
+  const { tenant, config } = await getStoreData(supabase, await TENANT_ID())
 
   // Apariencia de ESTA plantilla (colecciones): propia de Glow, no vive en
   // tienda-core — así cada template queda intercambiable a futuro.
   const { data: appearance } = await supabase
     .from('store_config')
     .select('collection_posts, collection_text_color')
-    .eq('tenant_id', TENANT_ID())
+    .eq('tenant_id', await TENANT_ID())
     .single()
 
   // Imágenes configurables desde Panel Admin > Personalización (banners grandes)
   const { data: assetsRows } = await supabase
     .from('store_assets')
     .select('slot, url')
-    .eq('tenant_id', TENANT_ID())
+    .eq('tenant_id', await TENANT_ID())
 
   const asset = (slot: string): string | null =>
     assetsRows?.find(a => a.slot === slot)?.url ?? null
@@ -55,7 +55,7 @@ export default async function HomePage() {
   const { data: categories } = await supabase
     .from('categories')
     .select('id, name, slug')
-    .eq('tenant_id', TENANT_ID())
+    .eq('tenant_id', await TENANT_ID())
     .eq('active', true)
     .order('sort_order')
     .limit(3)
@@ -67,7 +67,7 @@ export default async function HomePage() {
   const { data: catalog } = await supabase
     .from('products')
     .select(PRODUCT_SELECT)
-    .eq('tenant_id', TENANT_ID())
+    .eq('tenant_id', await TENANT_ID())
     .eq('active', true)
     .order('sort_order', { ascending: true })
     .limit(10)

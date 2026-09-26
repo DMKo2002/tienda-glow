@@ -1,3 +1,10 @@
+## 📚 Documentación del proyecto — leer antes de asumir cómo funciona algo
+
+- **Arquitectura, features, incidentes históricos y decisiones de producto**: vault de Obsidian en `C:\Plataforma CreArt\Gounuri Obsidian` — empezar por `Index.md`. Es la referencia más completa y más actualizada del proyecto; si algo de este archivo la contradice, confiar en el vault, no en este archivo.
+- **Reglas de Supabase, deploy y convenciones generales de la plataforma**: `C:\Plataforma CreArt\SQL\CLAUDE.md`.
+
+---
+
 # Regla de nombres de archivo para imágenes (SEO)
 
 Al agregar o modificar cualquier imagen estática del sitio (en `public/`),

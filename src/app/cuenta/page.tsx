@@ -46,17 +46,17 @@ export default async function CuentaPage() {
 
   const service = createServiceClient()
 
-  const { tenant, config } = await getStoreData(supabase, TENANT_ID())
+  const { tenant, config } = await getStoreData(supabase, await TENANT_ID())
 
   // Buscar customer: primero por auth user id, luego por email (cubre customers importados)
   let customer: any = null
   const { data: custById } = await service
-    .from('customers').select('*').eq('auth_user_id', user!.id).eq('tenant_id', TENANT_ID()).maybeSingle()
+    .from('customers').select('*').eq('auth_user_id', user!.id).eq('tenant_id', await TENANT_ID()).maybeSingle()
   if (custById) {
     customer = custById
   } else {
     const { data: custByEmail } = await service
-      .from('customers').select('*').eq('email', user!.email!).eq('tenant_id', TENANT_ID()).maybeSingle()
+      .from('customers').select('*').eq('email', user!.email!).eq('tenant_id', await TENANT_ID()).maybeSingle()
     customer = custByEmail
   }
 
@@ -66,7 +66,7 @@ export default async function CuentaPage() {
     .from('orders')
     .select('id, status, total, shipping_cost, created_at, payment_method, order_items(product_name, quantity, unit_price)')
     .eq('customer_id', actualCustomerId)
-    .eq('tenant_id', TENANT_ID())
+    .eq('tenant_id', await TENANT_ID())
     .order('created_at', { ascending: false })
     .limit(20)
 

@@ -8,6 +8,7 @@ import GoogleAnalytics from '@creart/tienda-core/GoogleAnalytics'
 import MetaPixel from '@creart/tienda-core/MetaPixel'
 import GoogleAdsTag from '@creart/tienda-core/GoogleAdsTag'
 import TikTokPixel from '@creart/tienda-core/TikTokPixel'
+import AdAttribution from '@creart/tienda-core/AdAttribution'
 import { BotIdClient } from 'botid/client'
 import { BOTID_PROTECTED_ROUTES } from '@creart/tienda-core/botid-config'
 import VisitTracker from '@creart/tienda-core/VisitTracker'
@@ -37,6 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <MetaPixel />
           <GoogleAdsTag />
           <TikTokPixel />
+          <AdAttribution />
           <VisitTracker />
         </CartProvider>
         </body>
