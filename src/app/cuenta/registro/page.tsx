@@ -53,6 +53,12 @@ function RegistroForm() {
   const [exito, setExito] = useState(false)
   const [confirmacion, setConfirmacion] = useState(false)
   const [regVisibility, setRegVisibility] = useState<'both' | 'retail_only' | 'wholesale_only'>('both')
+  // Fallback al env var global (el widget "default") hasta que la query de
+  // abajo resuelva, y para siempre si el tenant no tiene widget de pool
+  // asignado (turnstile_site_key queda null en ese caso).
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState(
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA'
+  )
 
   useEffect(() => {
     const supabase = createClient()
@@ -62,6 +68,23 @@ function RegistroForm() {
       if (rv === 'retail_only' && !isUpgrade) setTipo('retail')
       if (rv === 'wholesale_only' && !isUpgrade) setTipo('wholesale')
     })
+  }, [])
+
+  // Dominio propio verificado -> widget propio del pool (el widget "default"
+  // de arriba no autoriza ese hostname). Sin dominio propio, turnstile_site_key
+  // es null y se queda con el default. Mismo patron que RegistroForm.tsx en
+  // tienda-core, que este page.tsx no usa por tener su propio formulario.
+  useEffect(() => {
+    const supabase = createClient()
+    supabase
+      .from('store_config')
+      .select('turnstile_site_key')
+      .eq('tenant_id', TENANT_ID())
+      .single()
+      .then(({ data }) => {
+        const key = (data as any)?.turnstile_site_key
+        if (key) setTurnstileSiteKey(key)
+      })
   }, [])
 
   // Upgrade de minorista a mayorista: precarga los datos que ya tenemos de la
@@ -298,7 +321,7 @@ function RegistroForm() {
           <div className="flex justify-center py-2">
             <Turnstile
               key={turnstileKey}
-              sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA'}
+              sitekey={turnstileSiteKey}
               onVerify={token => setTurnstileToken(token)}
               onExpire={() => setTurnstileToken(null)}
               theme="light"
